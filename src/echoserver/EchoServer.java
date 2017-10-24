@@ -13,32 +13,17 @@ public class EchoServer {
                 System.out.println("Got a request!");
                 Socket client = sock.accept();
 
-                //PrintWriter writer = new PrintWriter(client.getOutputStream(), true);
                 OutputStream out = client.getOutputStream();
-                BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(client.getInputStream()));
-
-//                String line;
-//                while(true){
-//                    line = reader.readLine();
-//
-//                    if(line == null){
-//                        break;
-//                    }
-//
-//                    writer.println(line);
-//                    System.out.println(line);
-//                }
+                InputStream reader = client.getInputStream();
 
                 int nextByte;
+                // read from client, write to client
                 while((nextByte = reader.read()) != -1){
-                    //writer.print((char) nextByte);
                     out.write(nextByte);
-                    System.out.println((char) nextByte);
                 }
-                //writer.println();
-                System.out.println(nextByte);
 
+                out.flush();
+                client.shutdownOutput();
                 client.close();
             }
         } catch (IOException ioe){
