@@ -10,15 +10,22 @@ public class EchoClient {
             Socket socket = new Socket("127.0.0.1", 6013);
             //change ip address to any ip or url
 
-            InputStream input = socket.getInputStream();
+            InputStream fromServer = socket.getInputStream();
+            OutputStream toServer = socket.getOutputStream();
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+            int nextByte;
+            int incomingByte;
 
-            String line;
-            while((line = reader.readLine()) != null){
-                System.out.println(line);
+            //read from system.in, write out to server, read from server and write that
+            while ((nextByte = System.in.read()) != -1){
+                toServer.write(nextByte);
+                incomingByte = fromServer.read();
+
+                System.out.write(incomingByte);
             }
 
+            toServer.flush();
+            System.out.flush();
             socket.close();
         } catch (IOException ioe){
             System.out.println("Shit got real");
